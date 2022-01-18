@@ -1,6 +1,6 @@
 {
   "name": "@garry89/mirador-annotations",
-  "version": "0.5.641",
+  "version": "0.5.652",
   "description": "mirador-annotations React component added adapter for spring with other requeststyle and easyer extraction of id´s in json for canvas and annotation",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -38,8 +38,8 @@
     "lodash": "^4.17.11",
     "mirador": "^3.0.0-rc.5",
     "prop-types": "^15.7.2",
-    "react": "^17.0",
-    "react-dom": "^17.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "uuid": "^8.0.0"
   },
   "devDependencies": {
@@ -68,8 +68,8 @@
     "mirador": "^3.0.0-rc.5",
     "nwb": "^0.24.7",
     "prop-types": "^15.7.2",
-    "react": "^17.0",
-    "react-dom": "^17.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "uuid": "^8.2.0"
   },
   "author": "",

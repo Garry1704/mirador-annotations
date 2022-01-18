@@ -44,19 +44,13 @@ export default class SpringAdapter {
         console.log(response.status); // Will show you the status
         if (!response.ok) {
           if (response.status === 401) {
-            this.tokenwasExpired = true;
-            this.renewToken();
-            if (this.tokenwasExpired) {
-              alert('Login abgelaufen! Bitte ausloggen und neu einloggen.');
-              this.tokenwasExpired = false;
-              sessionStorage.removeItem('auth-token');
-              sessionStorage.removeItem('auth-refreshtoken');
-            } else {
-              this.create(annotation);
+            const succeededRefresh = this.error401();
+            if (succeededRefresh) {
+              return this.create(annotation);
             }
           }
         }
-        this.all();
+        return this.all();
       })
       .catch(() => this.all());
   }
@@ -82,7 +76,18 @@ export default class SpringAdapter {
       method: 'PATCH',
       withCredentials: true,
     })
-      .then((response) => this.all())
+      .then((response) => {
+        console.log(response.status); // Will show you the status
+        if (!response.ok) {
+          if (response.status === 401) {
+            const succeededRefresh = this.error401();
+            if (succeededRefresh) {
+              return this.create(annotation);
+            }
+          }
+        }
+        return this.all();
+      })
       .catch(() => this.all());
   }
 
@@ -106,7 +111,19 @@ export default class SpringAdapter {
       method: 'DELETE',
       withCredentials: true,
     })
-      .then((response) => this.all())
+      .then((response) => {
+        console.log(response.status); // Will show you the status
+        if (!response.ok) {
+          if (response.status === 401) {
+            const succeededRefresh = this.error401();
+            console.log(succeededRefresh);
+            if (succeededRefresh) {
+              return this.create(annotation);
+            }
+          }
+        }
+        return this.all();
+      })
       .catch(() => this.all());
   }
 
@@ -126,6 +143,14 @@ export default class SpringAdapter {
   }
 
   /** */
+  error401() {
+    sessionStorage.removeItem('auth-token');
+    sessionStorage.removeItem('auth-refreshtoken');
+    return this.renewToken();
+  }
+
+
+  /** */
   renewToken() {
     let myHeaders = new Headers();
     if (this.token) {
@@ -138,23 +163,23 @@ export default class SpringAdapter {
       headers: myHeaders,
       method: 'GET',
       withCredentials: true,
-    }).then(response => {
-      response.json()
-      console.log(response);
-    }
-    )
-      .then(data => {
-        console.log(data);
-        sessionStorage.removeItem('auth-token');
-        sessionStorage.removeItem('auth-refreshtoken');
-        sessionStorage.setItem('auth-token', data.access_token);
-        sessionStorage.setItem('auth-refreshtoken', data.refresh_token);
-        this.tokenwasExpired = false;
+    }).then((response) => response.json())
+      .then((data) => {
+        const oldToken = this.token;
+        const newToken = data.access_token;
+        const newRefreshToken = data.refresh_token;
+        sessionStorage.setItem('auth-token', newToken);
+        sessionStorage.setItem('auth-refreshtoken', newRefreshToken);
+        if (oldToken === (newToken)) {
+          console.log(oldToken);
+          console.log(this.token);
+          alert('Login abgelaufen! Bitte ausloggen und neu einloggen.');
+          return false;
+        }
+        return true;
       })
-      .catch(() => 
-      {
-        this.all();
-        console.log('Catch reingegangen');
-      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 }
