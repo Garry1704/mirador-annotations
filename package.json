@@ -1,7 +1,7 @@
 {
   "name": "@garry89/mirador-annotations",
-  "version": "0.5.652",
-  "description": "mirador-annotations React component added adapter for spring with other requeststyle and easyer extraction of id´s in json for canvas and annotation",
+  "version": "0.5.71",
+  "description": "mirador-annotations React component added adapter for spring with other requeststyle and easyer extraction of id´s in json for canvas and annotation and a dropdown menue for presets like poststamp or person",
   "main": "lib/index.js",
   "module": "es/index.js",
   "files": [
@@ -21,6 +21,9 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
+    "@mui/material": "^5.4.0",
     "@psychobolt/react-paperjs": "^1.0.0",
     "@psychobolt/react-paperjs-editor": "^0.0.14",
     "draft-js": "^0.11.6",

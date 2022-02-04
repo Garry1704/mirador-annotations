@@ -22,6 +22,9 @@ import Divider from '@material-ui/core/Divider';
 import MenuItem from '@material-ui/core/MenuItem';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import MenuList from '@material-ui/core/MenuList';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 import { SketchPicker } from 'react-color';
 import { v4 as uuid } from 'uuid';
 import { withStyles } from '@material-ui/core/styles';
@@ -65,6 +68,14 @@ class AnnotationCreation extends Component {
       }
     }
 
+    this.list = [
+      {body: ''},
+      { body: '<p><b>Briefmarke:</b></p>', closedMode: 'open', color: '#4A90E2', label: 'Briefmarke', tool: 'rectangle' },
+      { body: '<p><b>Poststempel:</b></p>', closedMode: 'open', color: '#50E3C2', label: 'Poststempel', tool: 'ellipse' },
+      { body: '<p><b>Person:</b></p>', closedMode: 'open', color: '#B8E986', label: 'Person', tool: 'rectangle' },
+      { body: '<p><b>Bemerkung:</b></p>', closedMode: 'open', color: '#000000', label: 'Bemerkung', tool: 'freehand', }
+    ];
+
     const toolState = {
       activeTool: 'cursor',
       closedMode: 'closed',
@@ -82,6 +93,7 @@ class AnnotationCreation extends Component {
       lineWeightPopoverOpen: false,
       popoverAnchorEl: null,
       popoverLineWeightAnchorEl: null,
+      preset: 0,
       svg: null,
       textEditorStateBustingKey: 0,
       xywh: null,
@@ -99,6 +111,7 @@ class AnnotationCreation extends Component {
     this.handleCloseLineWeight = this.handleCloseLineWeight.bind(this);
     this.closeChooseColor = this.closeChooseColor.bind(this);
     this.updateStrokeColor = this.updateStrokeColor.bind(this);
+    this.changePreset = this.changePreset.bind(this);
   }
 
   /** */
@@ -159,12 +172,12 @@ class AnnotationCreation extends Component {
       annotation, canvases, receiveAnnotation, config,
     } = this.props;
     const {
-      annoBody, tags, xywh, svg, textEditorStateBustingKey,
+      annoBody, tags, xywh, svg, textEditorStateBustingKey,preset,
     } = this.state;
     canvases.forEach((canvas) => {
       const storageAdapter = config.annotation.adapter(canvas.id);
       const anno = new WebAnnotation({
-        body: annoBody,
+        body: this.list[preset].body + annoBody,
         canvasId: canvas.id,
         id: (annotation && annotation.id) || `${uuid()}`,
         manifestId: canvas.options.resource.id,
@@ -218,15 +231,26 @@ class AnnotationCreation extends Component {
   }
 
   /** */
+  changePreset(e, presetNew) {
+    this.setState({
+      activeTool: this.list[presetNew.props.value].tool,
+      closedMode: this.list[presetNew.props.value].closedMode,
+      preset: presetNew.props.value,
+      strokeColor: this.list[presetNew.props.value].color,
+    });
+    // this.updateBody(this.list[presetNew.props.value].body);
+
+  }
+
+  /** */
   render() {
     const {
       annotation, classes, closeCompanionWindow, id, windowId,
     } = this.props;
-
     const {
       activeTool, colorPopoverOpen, currentColorType, fillColor, popoverAnchorEl, strokeColor,
       popoverLineWeightAnchorEl, lineWeightPopoverOpen, strokeWidth, closedMode, annoBody, svg,
-      textEditorStateBustingKey,
+      textEditorStateBustingKey, preset,
     } = this.state;
     return (
       <CompanionWindow
@@ -243,6 +267,7 @@ class AnnotationCreation extends Component {
           svg={svg}
           updateGeometry={this.updateGeometry}
           windowId={windowId}
+          preset={preset}
         />
         <form onSubmit={this.submitForm}>
           <Grid container>
@@ -355,6 +380,28 @@ class AnnotationCreation extends Component {
           <Grid container>
             <Grid item xs={12}>
               <Typography variant="overline">
+                Presets
+              </Typography>
+            </Grid>
+            <FormControl sx={{ m: 1, minWidth: 80 }}>
+              <Select
+                labelId="demo-simple-select-autowidth-label"
+                id="demo-simple-select-autowidth"
+                value={preset}
+                onChange={this.changePreset}
+                autoWidth
+              >
+                <MenuItem value={0}>Keine</MenuItem>
+                <MenuItem value={1}>Briefmarke</MenuItem>
+                <MenuItem value={2}>Poststempel</MenuItem>
+                <MenuItem value={3}>Person</MenuItem>
+                <MenuItem value={4}>Bemerkung</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid container>
+            <Grid item xs={12}>
+              <Typography variant="overline">
                 Content
               </Typography>
             </Grid>
@@ -451,7 +498,7 @@ AnnotationCreation.propTypes = {
 AnnotationCreation.defaultProps = {
   annotation: null,
   canvases: [],
-  closeCompanionWindow: () => {},
+  closeCompanionWindow: () => { },
 };
 
 export default withStyles(styles)(AnnotationCreation);
