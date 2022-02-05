@@ -70,9 +70,9 @@ class AnnotationCreation extends Component {
 
     this.list = [
       {body: ''},
-      { body: '<p><b>Briefmarke:</b></p>', closedMode: 'open', color: '#4A90E2', label: 'Briefmarke', tool: 'rectangle' },
-      { body: '<p><b>Poststempel:</b></p>', closedMode: 'open', color: '#50E3C2', label: 'Poststempel', tool: 'ellipse' },
-      { body: '<p><b>Person:</b></p>', closedMode: 'open', color: '#B8E986', label: 'Person', tool: 'rectangle' },
+      { body: '<p><b>Briefmarke:</b></p>', closedMode: 'closed', color: '#4A90E2', label: 'Briefmarke', tool: 'rectangle' },
+      { body: '<p><b>Poststempel:</b></p>', closedMode: 'closed', color: '#50E3C2', label: 'Poststempel', tool: 'ellipse' },
+      { body: '<p><b>Person:</b></p>', closedMode: 'closed', color: '#B8E986', label: 'Person', tool: 'rectangle' },
       { body: '<p><b>Bemerkung:</b></p>', closedMode: 'open', color: '#000000', label: 'Bemerkung', tool: 'freehand', }
     ];
 
