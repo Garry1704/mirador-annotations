@@ -5,7 +5,7 @@
 This branch is adding a Springadapter for an authentication method via JWT.
 The adapter sends the annotation as a requestbody to the given Springserver.
 
-The second feature is a possability to add presets via a hard coded list. 
+The second feature is a possability to add presets via a hard coded list (for example to mark poststamps or persons). 
 
 Thoughts for the Future:
 - Dynamic list for presets requesting via an API or direct from the server where the Annotations are saved.
